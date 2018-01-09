@@ -1,4 +1,5 @@
 import numpy as np
+import copy
 
 class HeisenbergSector(object):
 
@@ -6,11 +7,187 @@ class HeisenbergSector(object):
 
         self.number_of_sites = number_of_sites
         self.number_spinups = number_spinups
+        self.Jz = jz
         self.basis = []
+        self.H = None
 
     def setup_basis(self):
         """Generates a list of state object (basis for this sector)"""
+
+        #--- some auxillary functions ---
+        def basis_recursion(pos, basis):
+            bits = copy.deepcopy(basis[-1].bit_seq)
+
+            # shift highest to the right
+            bits[pos] = 1
+            bits[pos - 1] = 0
+
+            bits = shift_right(pos, bits)
+
+            # lowest state in this recursion
+            basis.append(SpinState(bits))
+
+            # continue recursion if limit not reached
+            if pos > 1:
+
+                # find next spin up
+                diff = 0 #steps till next spin up
+                while bits[pos - 1] == 0:
+                    pos -= 1
+                    diff += 1
+                    if pos < 1:
+                        return basis
+                
+                # create next recursion level
+                for i in range(diff):
+                    basis = basis_recursion(pos + i, basis)
+            
+            self.basis = basis
+            return basis
+
+        def shift_right(pos, bits):
+            """Shifts all up bits to the rhs of pos as far the right as possible
+            e.g. 110101100, pos=6 -> 110000111"""
+            count = int(np.sum(bits[0:pos-1]))
+            bits[0:pos-1] = 0
+            bits[:count] = 1
+            return bits
+        
+        #---
+
         basis = []
+
+        pos = self.number_spinups
+
+        # 1. state
+        basis.append(
+            SpinState(2**self.number_spinups -1, self.number_of_sites - 1)
+        )
+
+        while pos < self.number_of_sites:       
+            basis = basis_recursion(pos, basis)
+            pos += 1
+        
+
+        return basis
+
+    def setup_hamiltonian(self):
+        """Creates the hamiltonian matrix in the spin basis"""
+        
+        if self.basis == []:
+            self.setup_basis()
+
+
+        #--- prerequisites ---
+        basis_in_decimal = [x.decimal for x in self.basis]
+
+        dim = len(self.basis)
+        H = np.zeros((dim, dim)) #todo sparse matrix!
+        #---
+
+        for i, state in enumerate(self.basis):
+            # diagonal
+            H[i, i] = state.energy()
+            
+            #--- off-diagonal (are all 1/2 because J^\top = 1) ---
+            flipped = [x.decimal for x in state.generate_flipped_states()]
+
+            # bisection
+            j = [basis_in_decimal.index(f) for f in flipped]            
+
+            # again all elements are 1/2
+            H[i, j] = 0.5
+            #---
+
+        self.H = H
+        return H
+
+    def lanczos_diagonalisation(
+            self, 
+            H, 
+            n_max=None, 
+            n_diag=None, 
+            delta_E=1E-7, 
+            delta_k=1E-15
+        ):
+        
+        L = len(H)
+
+        if n_max is None:
+            n_max = 2 * L**2
+
+        if n_diag is None:
+            n_diag = np.ceil(L / 10.0)
+
+        #--- init ---
+        n = 1
+        converged = False
+        k, e = [], []
+
+        x = np.random.rand(L)
+        x_start = x # needed for coefficient recovery
+        x_old = np.zeros(L)
+        E_old = 1E10
+
+        def norm(vector):
+            return np.sqrt(np.sum(x**2))
+        #---
+
+        while not converged:
+            k.append(norm(x))
+
+            if k[-1] < delta_k:
+                converged = True
+                print("Convergence reached: k < delta_k")
+                break
+
+            x = x / k[-1]
+            e.append(np.dot(x, np.dot(H, x)))
+
+            if n % n_diag == 0:
+                # diagonalize in krylov space
+                H_t = np.diag(e) + np.diag(k[1:], +1) + np.diag(k[1:], -1)
+                E = np.linalg.eig(H_t)[0][0]
+
+                if np.abs(E - E_old) < delta_E:
+                    converged = True
+                    print("Convergence reached: dE < delta_E")
+                    break
+                else:
+                    E_old = E
+
+            x_new = np.dot(H, x) - e[-1] * x - k[-1] * x_old
+            x_old = x
+            x = x_new
+
+            n += 1
+
+            if n > n_max:
+                n -= 1
+                converged = True
+                print("Convergence reached: n_max iterations exceeded")
+
+        #--- calculate coefficients in spin basis ---
+        c = np.zeros(L)
+        c_krylov = np.linalg.eig(H_t)[1][:, 0]
+        x = x_start
+        x_old = 0
+
+        for i in range(n):
+            x  = x / k[i]
+            c += c_krylov[i] * x
+
+            x_new = np.dot(H, x) - e[i] * x - k[i] * x_old
+            x_old = x
+            x = x_new
+        #---
+
+        return E, c
+        
+
+
+
+
 
 
 
@@ -22,9 +199,36 @@ class SpinState(object):
 
         if msb is None:
             self.bit_seq = state
+            self.decimal = self._binary_to_decimal(state)
             self.msb = len(state) - 1
         else:
             self.bit_seq = self._decimal_to_binary(state, msb)
+            self.decimal = state
+            self.msb = msb
+
+    
+    def generate_flipped_states(self):
+        #--- find flipable sites ---
+        # get spins of nearest neighbour
+        bit_seq_nearest_neighbour = np.roll(self.bit_seq, -1)
+
+        # todo check this again
+        is_flipable = self.bit_seq != bit_seq_nearest_neighbour
+        #---
+
+        flip_states = []
+
+        # create new state for every flipable site 
+        for ind in np.arange(self.msb + 1)[is_flipable]:
+            flipped_seq = copy.deepcopy(self.bit_seq)
+            
+            # swap spin valies at i and i+1 (equivalent to spin flip)
+            flipped_seq[ind], flipped_seq[(ind + 1) % (self.msb + 1)] = \
+                flipped_seq[(ind + 1) % (self.msb + 1)], flipped_seq[ind]
+
+            flip_states.append(SpinState(flipped_seq))
+        
+        return flip_states
         
 
     def _binary_to_decimal(self, bit_array):
@@ -47,6 +251,10 @@ class SpinState(object):
         
         return bit_seq
 
+    def energy(self):
+        sz = self.bit_seq - 0.5
+        return np.sum(sz * np.roll(sz, -1))
+
     def magnetisation(self):
         # {0,1} -> {-1/2,1/2}
         sz = self.bit_seq - 0.5
@@ -57,7 +265,7 @@ class SpinState(object):
         sz[ind] *= -1
         return np.sum(sz) / (self.msb + 1)
 
-    def magnetisation_sqared(self):
+    def magnetisation_squared(self):
         # {0,1} -> {-1/2,1/2}
         sz = self.bit_seq - 0.5
 
@@ -69,3 +277,6 @@ class SpinState(object):
         return np.dot(sz, np.dot(sign, sz)) / (self.msb + 1)**2
 
 
+
+if __name__ == '__main__':
+    sector=HeisenbergSector(4,2,1)

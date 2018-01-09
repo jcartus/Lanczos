@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from qm import SpinState
+from qm import SpinState, HeisenbergSector
 
 class TestStates(unittest.TestCase):
 
@@ -56,10 +56,91 @@ class TestStates(unittest.TestCase):
         
         pass
 
-        #self.assertEqual(
-        #    - 0.25 + 0.25 - 0.25 + 0.25 + 0.25,
-        #    self._test_state.energy
-        #)
+        self.assertEqual(
+            - 0.25 + 0.25 - 0.25 + 0.25 + 0.25,
+            self._test_state.energy()
+        )
+
+
+class TestSector(unittest.TestCase):
+
+    def test_basis_generation(self):
+        sector = HeisenbergSector(
+            number_of_sites=4, 
+            number_spinups=2, 
+            jz=1
+        )
+
+        sector.setup_basis()
+
+        expected = [3, 5, 6, 9, 10, 12]
+        actual = [x.decimal for x in sector.basis]
+
+        self.assertListEqual(expected, actual)
+
+    def test_H_generation(self):
+        sector = HeisenbergSector(
+            number_of_sites=4, 
+            number_spinups=2, 
+            jz=1
+        )
+
+        sector.setup_hamiltonian()
+
+        J = sector.Jz
+
+        expected = np.array(
+            [
+                [0, 0.5, 0, 0, 0.5, 0 ], 
+                [0.5, -J, 0.5, 0.5, 0, 0.5 ],
+                [0, 0.5, 0, 0, 0.5, 0 ],
+                [0, 0.5, 0, 0, 0.5, 0 ],
+                [0.5, 0, 0.5, 0.5, -J, 0.5 ],
+                [0, 0.5, 0, 0, 0.5, 0 ]
+            ]
+        )
+
+        np.testing.assert_array_equal(expected, sector.H)
+
+    def test_lanczos_small(self):
+        
+        sector = HeisenbergSector(
+            number_of_sites=4, 
+            number_spinups=2, 
+            jz=1
+        )
+
+        A = np.array([[2, 1], [1, 2]])
+        a = 1
+        v = np.array([1,-1])
+
+        self._assert_eig_result(a, v, sector.lanczos_diagonalisation(A))
+
+    
+    def _assert_eig_result(self, a, v, actual, delta=1E-7):
+        
+        self.assertAlmostEqual(a, actual[0], delta=delta)
+
+        self._assert_vector_match(v, actual[1], delta=delta)
+
+
+    def _assert_vector_match(self, a, b, delta=1E-7):
+
+        self.assertEqual(len(a), len(b))
+
+        lhs = np.dot(a, b)
+        rhs = np.sqrt(np.sum(a**2)) + np.sqrt(np.sum(b**2))
+
+        self.assertTrue((lhs - rhs) < delta)
+
+
+
+
+
+
+
+
+
 
 if __name__ == '__main__':
     unittest.main()
