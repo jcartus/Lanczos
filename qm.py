@@ -1,6 +1,7 @@
 import numpy as np
+import math
 import copy
-
+from utils import Result
 class HeisenbergSector(object):
 
     def __init__(self, number_of_sites, number_spinups, jz):
@@ -102,8 +103,8 @@ class HeisenbergSector(object):
         self.H = H
         return H
 
+    @staticmethod
     def lanczos_diagonalisation(
-            self, 
             H, 
             n_max=None, 
             n_diag=None, 
@@ -184,8 +185,14 @@ class HeisenbergSector(object):
 
         return E, c
         
+    def calculate_ground_state(self):
+        self.setup_basis()
+        self.setup_hamiltonian()
+        E, c = self.lanczos_diagonalisation(self.H)
 
+        groundstate = MixedState(c, self.basis)
 
+        return E, groundstate
 
 
 
@@ -276,7 +283,73 @@ class SpinState(object):
 
         return np.dot(sz, np.dot(sign, sz)) / (self.msb + 1)**2
 
+    def correlation(self):
+        sz = self.bit_seq - 0.5
+        return sz[0] * sz
+
+class MixedState(object):
+
+    def __init__(self, coeffs, basis):
+        self._basis = basis
+        self._coefficients = coeffs
 
 
-if __name__ == '__main__':
-    sector=HeisenbergSector(4,2,1)
+    def magnetisation(self):
+        """m = sum_i |c_i|^2 * m_i"""
+        M = np.array([x.magnetisation() for x in self._basis])
+        return np.dot(self._coefficients**2, M)
+
+    def magnetisation_squared(self):
+        """m2 = sum_i |c_i|^2 * m2_i"""
+        M2 = np.array([x.magnetisation_squared() for x in self._basis])
+        return np.dot(self._coefficients**2, M2)
+
+    def correlation(self):
+        """corr_i = sum_n (S_0^zS_i^z)_n * |c_n|^2"""
+        correlations = np.array([x.correlation for x in self._basis])
+        return np.dot(self._coefficients**2, correlations)
+
+def simulate_heisenberg_model(L, jz):
+    """Calculates a few properties of the 1-D Heisenberg Modell
+    
+    Args:
+        L: number of lattice sites
+        jz: the value of J^z
+
+    Returns:
+        Result object (stores energy density, magnetisation, 
+        magnetisation squared and the autocorrelation)
+    """
+
+    #--- determine sectors to search for ground state in ---
+    # number of spin ups in sector with lowest S_tot^z
+    N_min = math.ceil(L / 2)
+
+    # if jz != lieb-mattis theorem can be used
+    if jz == 0:
+        N = list(range(N_min, L+1))
+    else:
+        N = N_min
+    #---
+
+    #--- scan through sector(s) ---
+    E_min = 1E7
+    lowest_ground_state = None
+    for n in N:
+        sector = HeisenbergSector(L, n, jz)
+        E, ground_state = sector.calculate_ground_state()
+        if E < E_min:
+            E_min = E
+            lowest_ground_state = ground_state
+    #---
+
+    result = Result(
+        L, 
+        E_min, 
+        lowest_ground_state.magnetisation(),
+        lowest_ground_state.magnetisation_squared(),
+        lowest_ground_state.correlation()
+    )
+
+    return result
+    

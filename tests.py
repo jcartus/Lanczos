@@ -1,3 +1,9 @@
+"""
+Todo:
+    - tests für correlation in spin und composed states
+
+"""
+
 import unittest
 
 import numpy as np
@@ -154,7 +160,7 @@ class TestSector(unittest.TestCase):
         rhs = np.sqrt(np.sum(a**2)) + np.sqrt(np.sum(b**2))
 
         self.assertTrue((lhs - rhs) < delta)
-
+        
 
 
 
