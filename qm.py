@@ -1,7 +1,9 @@
 import numpy as np
 import math
 import copy
-from utils import Result
+import utilities
+
+
 class HeisenbergSector(object):
 
     def __init__(self, number_of_sites, number_spinups, jz):
@@ -57,6 +59,12 @@ class HeisenbergSector(object):
         #---
 
         basis = []
+
+        # if all spins are up only one state possible
+        if self.number_spinups == self.number_of_sites:
+            basis.append(SpinState(np.ones(self.number_spinups)))
+            self.basis = basis
+            return basis
 
         pos = self.number_spinups
 
@@ -115,7 +123,7 @@ class HeisenbergSector(object):
         L = len(H)
 
         if n_max is None:
-            n_max = L # 2 * L**2 #todo oder doch hoeher?
+            n_max = 2 * L**2 #todo oder doch nur L?
 
         if n_diag is None:
             n_diag = np.ceil(L / 10.0)
@@ -139,7 +147,10 @@ class HeisenbergSector(object):
 
             if k[-1] < delta_k:
                 converged = True
-                print("Convergence reached: k < delta_k")
+                n -= 1
+                utilities.InfoStream.message(
+                    "Convergence reached after {0} iterations: k < delta_k".format(n)
+                )
                 break
 
             x = x / k[-1]
@@ -152,7 +163,9 @@ class HeisenbergSector(object):
 
                 if np.abs(E - E_old) < delta_E:
                     converged = True
-                    print("Convergence reached: dE < delta_E")
+                    utilities.InfoStream.message(
+                        "Convergence reached after {0} iterations: dE < delta_E".format(n)
+                    )
                     break
                 else:
                     E_old = E
@@ -166,7 +179,8 @@ class HeisenbergSector(object):
             if n > n_max:
                 n -= 1
                 converged = True
-                print("Convergence reached: n_max iterations exceeded")
+                utilities.InfoStream.message(
+                    "Convergence reached after {0} iterations: n_max iterations exceeded".format(n))
 
         #--- calculate coefficients in spin basis ---
         c = np.zeros(L)
@@ -306,7 +320,7 @@ class MixedState(object):
 
     def correlation(self):
         """corr_i = sum_n (S_0^zS_i^z)_n * |c_n|^2"""
-        correlations = np.array([x.correlation for x in self._basis])
+        correlations = np.array([x.correlation() for x in self._basis])
         return np.dot(self._coefficients**2, correlations)
 
 def simulate_heisenberg_model(L, jz):
@@ -320,6 +334,10 @@ def simulate_heisenberg_model(L, jz):
         Result object (stores energy density, magnetisation, 
         magnetisation squared and the autocorrelation)
     """
+
+    msg = "Simulating System with Jz = {0} and L = {1}".format(jz, L)
+    utilities.InfoStream.message(msg, 1)
+
 
     #--- determine sectors to search for ground state in ---
     # number of spin ups in sector with lowest S_tot^z
@@ -336,6 +354,7 @@ def simulate_heisenberg_model(L, jz):
     E_min = 1E7
     lowest_ground_state = None
     for n in N:
+        utilities.InfoStream.message("Analyzing sector n_up = {0}".format(n))
         sector = HeisenbergSector(L, n, jz)
         E, ground_state = sector.calculate_ground_state()
         if E < E_min:
@@ -343,7 +362,7 @@ def simulate_heisenberg_model(L, jz):
             lowest_ground_state = ground_state
     #---
 
-    result = Result(
+    result = utilities.Result(
         L, 
         E_min, 
         lowest_ground_state.magnetisation(),
