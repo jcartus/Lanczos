@@ -347,7 +347,7 @@ def simulate_heisenberg_model(L, jz):
     if jz == 0:
         N = list(range(N_min, L+1))
     else:
-        N = N_min
+        N = [N_min]
     #---
 
     #--- scan through sector(s) ---
