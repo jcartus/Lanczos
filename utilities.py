@@ -32,6 +32,9 @@ class Experiment(object):
 
     def conduct(self):
         """Simulate Heisenberg model for given lattice sizes and jz"""
+        msg = "Start experiment with Jz = " + str(self.Jz) + \
+            " and L = [ " + ", ".join(map(str, self.lattice_sizes)) + " ]"
+        InfoStream.message(msg, 1)
         for L in self.lattice_sizes:
             self.store_results(simulate_heisenberg_model(L, self.Jz))
 
@@ -41,7 +44,22 @@ class Experiment(object):
         if wait:
             plt.show()
 
-        
+class InfoStream(object):
+    """Used to print properly formatted user messages """
+    
+    _prefixes = ["[-] ", "[+] ", "[#] "]
+
+    suppress_level = -1    
+
+    @classmethod
+    def message(cls, text, level=0):
+        """Prints a user message in practical format. Level 0 is an nice to have
+        , 1 is a practical info, and 2 is an important info"""
+
+        if level > cls.suppress_level:
+            print(cls._prefixes[level] + text)
+
+
 
 class Printer(object):
 
