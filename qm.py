@@ -114,7 +114,7 @@ class HeisenbergSector(object):
         L = len(H)
 
         if n_max is None:
-            n_max = 2 * L**2
+            n_max = L # 2 * L**2 #todo oder doch hoeher?
 
         if n_diag is None:
             n_diag = np.ceil(L / 10.0)
@@ -147,7 +147,7 @@ class HeisenbergSector(object):
             if n % n_diag == 0:
                 # diagonalize in krylov space
                 H_t = np.diag(e) + np.diag(k[1:], +1) + np.diag(k[1:], -1)
-                E = np.linalg.eig(H_t)[0][0]
+                E = np.linalg.eigvalsh(H_t)[0]
 
                 if np.abs(E - E_old) < delta_E:
                     converged = True

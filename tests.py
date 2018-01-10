@@ -116,6 +116,28 @@ class TestSector(unittest.TestCase):
 
         self._assert_eig_result(a, v, sector.lanczos_diagonalisation(A))
 
+    def test_lanzos_middle(self):
+        sector = HeisenbergSector(
+            number_of_sites=4, 
+            number_spinups=2, 
+            jz=1
+        )
+
+        A = np.array(
+            [
+                [ 3, 2, 4, 0, -2 ], 
+                [ 2, -2, 6, -2, 1 ], 
+                [ 4, 6, 2, 4, 4 ], 
+                [ 0, -2, 4, 7, 6 ], 
+                [ -2, 1, 4, 6, -9 ]
+            ]
+        )
+        a = -12.0509
+        v = np.array([0.204647, -0.04609, -0.246984, -0.267927, 1])
+
+        self._assert_eig_result(a, v, sector.lanczos_diagonalisation(A), 1E-4)
+        
+
     
     def _assert_eig_result(self, a, v, actual, delta=1E-7):
         
