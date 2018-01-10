@@ -1,6 +1,12 @@
-from utils import Experiment, Printer
+from utilities import Experiment, Printer
+from utilities import InfoStream as info
+import matplotlib.pyplot as plt
+
 
 def main():
+
+    info.message("Welcome!", 2)
+
     Jz = [0, 1, 2]
     L_min = 2
     L_max = 16
@@ -13,7 +19,15 @@ def main():
         experiments.append(experiment)
         #experiment.display()
 
+    info.message("Calculation finished. Start plotting ...", 2)
+
     Printer.plot_all(experiments)
+
+    plt.show()
+
+    info.message("All done. Goodbye ...", 2)
+
+    
 
 if __name__ == '__main__':
     main()
