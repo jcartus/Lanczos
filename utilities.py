@@ -1,5 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from os.path import isfile
+from os import linesep
+
+from datetime import datetime
 
 from qm import simulate_heisenberg_model
 
@@ -159,4 +163,57 @@ class Printer(object):
         cls.plot_correlation(experiments, axes[1, 0])
 
         return fig
+    
+    @staticmethod
+    def export_plot(fig, file_name):
 
+        # if file alread exists append postfix to name
+        while isfile(file_name):
+            InfoStream.message(file_name + " already exits. Adding postfix...")
+            file_name += "_2"            
+        
+        fig.savefig(file_name)
+        InfoStream.message("Figure saved to " + file_name)
+
+    @staticmethod
+    def export_data(experiments, file_name):
+
+        if not isinstance(experiments, list):
+            experiments = [experiments]
+
+
+        while isfile(file_name):
+            InfoStream.message(file_name + " already exits. Adding postfix...")
+            file_name += "_2"
+
+        with open(file_name, "w") as f:
+            for ex in experiments:
+                txt =  "===========================================" + linesep
+                txt += "New Experiment from " + datetime.now().isoformat() + linesep
+                txt += "-------------------------------------------" + linesep
+                txt += "J^z = {0}, L = [".format(ex.Jz) + ", ".join(ex.lattice_sizes) + "]" + linesep
+                txt += linesep
+                txt += "-------------------------------------------" + linesep
+                txt += "L\tE/L\tM\tM^2" + linesep
+                
+                # plot E/L, M and M2
+                for i, L in enumerate(ex.lattice_sizes):
+                    txt += L + "\t" + \
+                        ex.energy_densities[i] + "\t" + \
+                        ex.magnetisations[i] + "\t" + \ 
+                        ex.plot_magnetisations_squared[i] + "\t" + linesep
+                txt += linesep
+            
+                # plt correlation
+                txt += "-------------------------------------------" + linesep
+                txt += "Correlation function" + linesep
+                txt += linesep.join(ex.correlation) + linesep
+                txt += "-------------------------------------------" + linesep
+                txt += "===========================================" + linesep
+                txt += linesep
+
+                # write buffer to file
+                f.write(txt)
+
+        InfoStream.message("Data writte to " + file_name)
+        
