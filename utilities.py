@@ -66,6 +66,7 @@ class InfoStream(object):
 
 
 class Printer(object):
+    """Used to display/export simulation results"""
 
     @staticmethod
     def generate_subplot():
@@ -217,3 +218,9 @@ class Printer(object):
 
         InfoStream.message("Data writte to " + file_name)
         
+    @classmethod
+    def export_all(cls, experiments, data_file, plot_file):
+        cls.export_data(experiments, data_file
+        fig = cls.plot_all(experiments)
+        cls.export_plot(fig, plot_file))
+
