@@ -9,8 +9,11 @@ def main():
 
     Jz = [0, 1, 2]
     L_min = 2
-    L_max = 16
+    L_max = 8#16
     L_step = 1
+
+    file_name = "results"
+
 
     experiments = []
     for jz in Jz:
@@ -21,7 +24,7 @@ def main():
 
     info.message("Calculation finished. Start plotting ...", 2)
 
-    Printer.plot_all(experiments)
+    Printer.export_all(experiments, file_name + ".txt", file_name + ".png")
 
     plt.show()
 

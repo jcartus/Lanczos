@@ -192,23 +192,24 @@ class Printer(object):
                 txt =  "===========================================" + linesep
                 txt += "New Experiment from " + datetime.now().isoformat() + linesep
                 txt += "-------------------------------------------" + linesep
-                txt += "J^z = {0}, L = [".format(ex.Jz) + ", ".join(ex.lattice_sizes) + "]" + linesep
+                txt += "J^z = {0}, L = [".format(ex.Jz) + \
+                    ", ".join(map(str, ex.lattice_sizes)) + "]" + linesep
                 txt += linesep
                 txt += "-------------------------------------------" + linesep
                 txt += "L\tE/L\tM\tM^2" + linesep
                 
                 # plot E/L, M and M2
                 for i, L in enumerate(ex.lattice_sizes):
-                    txt += L + "\t" + \
-                        ex.energy_densities[i] + "\t" + \
-                        ex.magnetisations[i] + "\t" + \ 
-                        ex.plot_magnetisations_squared[i] + "\t" + linesep
+                    txt += str(L) + "\t" + \
+                        str(ex.energy_densities[i]) + "\t" + \
+                        str(ex.magnetisations[i]) + "\t" + \
+                        str(ex.magnetisations_squared[i]) + "\t" + linesep
                 txt += linesep
             
                 # plt correlation
                 txt += "-------------------------------------------" + linesep
                 txt += "Correlation function" + linesep
-                txt += linesep.join(ex.correlation) + linesep
+                txt += linesep.join(map(str, ex.correlation)) + linesep
                 txt += "-------------------------------------------" + linesep
                 txt += "===========================================" + linesep
                 txt += linesep
@@ -216,11 +217,14 @@ class Printer(object):
                 # write buffer to file
                 f.write(txt)
 
-        InfoStream.message("Data writte to " + file_name)
+        InfoStream.message("Data written to " + file_name)
         
     @classmethod
     def export_all(cls, experiments, data_file, plot_file):
-        cls.export_data(experiments, data_file
+        
+        cls.export_data(experiments, data_file)
         fig = cls.plot_all(experiments)
-        cls.export_plot(fig, plot_file))
+        cls.export_plot(fig, plot_file)
+
+        InfoStream().message("Export finished.")
 
