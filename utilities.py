@@ -9,7 +9,7 @@ class Result(object):
         self.energy_density = E
         self.magnetisation = m
         self.magnetisation_squared = m2
-        self.correleation = corr
+        self.correlation = corr
 
 class Experiment(object):
     def __init__(self, Jz, L_min=2, L_max=16, L_step=1):
@@ -19,7 +19,7 @@ class Experiment(object):
         self.energy_densities = []
         self.magnetisations = []
         self.magnetisations_squared = []
-        self.correleation = None
+        self.correlation = None
 
     def store_results(self, result):
         """Append results of a simulation to previous results """
@@ -28,13 +28,13 @@ class Experiment(object):
         self.magnetisations_squared.append(result.magnetisation_squared)
 
         if result.L == max(self.lattice_sizes):
-            self.correleation = result.correleation
+            self.correlation = result.correlation
 
     def conduct(self):
         """Simulate Heisenberg model for given lattice sizes and jz"""
         msg = "Start experiment with Jz = " + str(self.Jz) + \
             " and L = [ " + ", ".join(map(str, self.lattice_sizes)) + " ]"
-        InfoStream.message(msg, 1)
+        InfoStream.message(msg, 2)
         for L in self.lattice_sizes:
             self.store_results(simulate_heisenberg_model(L, self.Jz))
 
@@ -82,9 +82,9 @@ class Printer(object):
                 label="$J^z={0}$".format(ex.Jz)
             )
         
-        ax.title("Energy densities")
-        ax.xlabel("L")
-        ax.ylabel("E / L")
+        ax.set_title("Energy densities")
+        ax.set_xlabel("L")
+        ax.set_ylabel("E / L")
         ax.legend()
 
     @classmethod
@@ -102,9 +102,9 @@ class Printer(object):
                 label="$J^z={0}$".format(ex.Jz)
             )
         
-        ax.title("Magnetisations")
-        ax.xlabel("L")
-        ax.ylabel("$\lbrace \hat{M}_z\rbrace$")
+        ax.set_title("Magnetisations")
+        ax.set_xlabel("L")
+        ax.set_ylabel("$< \hat{M}_z>$")
         ax.legend()
 
     @classmethod
@@ -122,9 +122,9 @@ class Printer(object):
                 label="$J^z={0}$".format(ex.Jz)
             )
         
-        ax.title("Squared Magnetisations")
-        ax.xlabel("L")
-        ax.ylabel("$\lbrace\hat{M}_z^2\rbrace$")
+        ax.set_title("Squared Magnetisations")
+        ax.set_xlabel("L")
+        ax.set_ylabel("$<\hat{M}_z^2>$")
         ax.legend()
     
 
@@ -138,14 +138,14 @@ class Printer(object):
         
         for ex in experiments:
             ax.plot(
-                ex.lattice_sizes, 
-                ex.correleation, 
+                list(range(len(ex.correlation))),
+                ex.correlation, 
                 label="$J^z={0}$".format(ex.Jz)
             )
         
-        ax.title("Spin correlation")
-        ax.xlabel("i")
-        ax.ylabel("$\lbrace\hat{S}_0^z\hat{S}_0^i\rbrace$")
+        ax.set_title("Spin correlation")
+        ax.set_xlabel("i")
+        ax.set_ylabel("$<\hat{S}_0^z\hat{S}_0^i>$")
         ax.legend()   
 
     @classmethod
@@ -153,10 +153,10 @@ class Printer(object):
 
         fig, axes = plt.subplots(2, 2)
 
-        cls.plot_energy(experiments, axes[0])
-        cls.plot_magnetisations(experiments, axes[1])
-        cls.plot_magnetisations_squared(experiments, axes[2])
-        cls.plot_correlation(experiments, axes[3])
+        cls.plot_energy(experiments, axes[0, 0])
+        cls.plot_magnetisations(experiments, axes[0, 1])
+        cls.plot_magnetisations_squared(experiments, axes[1, 1])
+        cls.plot_correlation(experiments, axes[1, 0])
 
         return fig
 

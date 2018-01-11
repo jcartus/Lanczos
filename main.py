@@ -14,7 +14,7 @@ def main():
 
     experiments = []
     for jz in Jz:
-        experiment = Experiment(jz, L_min=2, L_max=16, L_step=1)
+        experiment = Experiment(jz, L_min=L_min, L_max=L_max, L_step=L_step)
         experiment.conduct()
         experiments.append(experiment)
         #experiment.display()
