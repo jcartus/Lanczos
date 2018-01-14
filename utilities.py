@@ -3,9 +3,10 @@ import matplotlib.pyplot as plt
 from os.path import isfile
 from os import linesep
 
+import qm
+
 from datetime import datetime
 
-from qm import simulate_heisenberg_model
 
 class Result(object):
     def __init__(self, L, E, m, m2, corr):
@@ -40,7 +41,7 @@ class Experiment(object):
             " and L = [ " + ", ".join(map(str, self.lattice_sizes)) + " ]"
         InfoStream.message(msg, 2)
         for L in self.lattice_sizes:
-            self.store_results(simulate_heisenberg_model(L, self.Jz))
+            self.store_results(qm.simulate_heisenberg_model(L, self.Jz))
 
     def display(self, wait=False):
         """Display results of experiment"""
@@ -171,7 +172,7 @@ class Printer(object):
         # if file alread exists append postfix to name
         while isfile(file_name):
             InfoStream.message(file_name + " already exits. Adding postfix...")
-            file_name += "_2"            
+            file_name += "_2.png"            
         
         fig.savefig(file_name)
         InfoStream.message("Figure saved to " + file_name)
@@ -185,7 +186,7 @@ class Printer(object):
 
         while isfile(file_name):
             InfoStream.message(file_name + " already exits. Adding postfix...")
-            file_name += "_2"
+            file_name += "_2.txt"
 
         with open(file_name, "w") as f:
             for ex in experiments:
