@@ -9,7 +9,7 @@ def main():
 
     Jz = [0, 1, 2]
     L_min = 2
-    L_max = 8#16
+    L_max = 10#16
     L_step = 1
 
     file_name = "results"

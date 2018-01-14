@@ -184,7 +184,7 @@ class HeisenbergSector(object):
 
         #--- calculate coefficients in spin basis ---
         c = np.zeros(L)
-        c_krylov = np.linalg.eig(H_t)[1][:, 0]
+        c_krylov = np.linalg.eigh(H_t)[1][0]
         x = x_start
         x_old = 0
 
@@ -197,19 +197,19 @@ class HeisenbergSector(object):
             x = x_new
         #---
 
-        return E, c
+        return E, c, n
         
-    def calculate_ground_state(self):
+    def calculate_ground_state(self, give_iterations=False):
         self.setup_basis()
         self.setup_hamiltonian()
-        E, c = self.lanczos_diagonalisation(self.H)
+        E, c, n = self.lanczos_diagonalisation(self.H)
 
         groundstate = MixedState(c, self.basis)
 
-        return E, groundstate
-
-
-
+        if give_iterations:
+            return E, groundstate, give_iterations
+        else:
+            return E, groundstate
 
 
 class SpinState(object):
