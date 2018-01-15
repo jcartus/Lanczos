@@ -96,7 +96,7 @@ class HeisenbergSector(object):
 
         for i, state in enumerate(self.basis):
             # diagonal
-            H[i, i] = state.energy()
+            H[i, i] = state.energy(self.Jz)
             
             #--- off-diagonal (are all 1/2 because J^\top = 1) ---
             flipped = [x.decimal for x in state.generate_flipped_states()]
@@ -104,8 +104,8 @@ class HeisenbergSector(object):
             # bisection
             j = [basis_in_decimal.index(f) for f in flipped]            
 
-            # again all elements are 1/2
-            H[i, j] = 0.5
+            # again all elements are 1/2, expect for N=2
+            H[i, j] = 0.5 + int(self.number_of_sites == 2) * 0.5
             #---
 
         self.H = H
@@ -272,9 +272,9 @@ class SpinState(object):
         
         return bit_seq
 
-    def energy(self):
+    def energy(self, jz):
         sz = self.bit_seq - 0.5
-        return np.sum(sz * np.roll(sz, -1))
+        return np.sum(sz * np.roll(sz, -1)) * jz
 
     def magnetisation(self):
         # {0,1} -> {-1/2,1/2}
@@ -311,17 +311,19 @@ class MixedState(object):
     def magnetisation(self):
         """m = sum_i |c_i|^2 * m_i"""
         M = np.array([x.magnetisation() for x in self._basis])
-        return np.dot(self._coefficients**2, M)
+        return np.dot(self._coefficients**2, M) / np.sum(self._coefficients**2)
 
     def magnetisation_squared(self):
         """m2 = sum_i |c_i|^2 * m2_i"""
         M2 = np.array([x.magnetisation_squared() for x in self._basis])
-        return np.dot(self._coefficients**2, M2)
+        return np.dot(self._coefficients**2, M2) / np.sum(self._coefficients**2)
 
     def correlation(self):
         """corr_i = sum_n (S_0^zS_i^z)_n * |c_n|^2"""
         correlations = np.array([x.correlation() for x in self._basis])
-        return np.dot(self._coefficients**2, correlations)
+        return np.dot(
+            self._coefficients**2, correlations
+        ) / np.sum(self._coefficients**2)
 
 def simulate_heisenberg_model(L, jz):
     """Calculates a few properties of the 1-D Heisenberg Modell
@@ -371,4 +373,3 @@ def simulate_heisenberg_model(L, jz):
     )
 
     return result
-    
