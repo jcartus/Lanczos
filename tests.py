@@ -59,17 +59,32 @@ class TestStates(unittest.TestCase):
             self._test_state.magnetisation()
         )
 
+    def test_magnetisation_two_spins(self):
+        """<M> shloud be zero for all states """
+        state_all_up = SpinState(np.array([1, 1]))
+        self.assertEqual(0, state_all_up.magnetisation())
+
+        state_neel_1 =  SpinState(np.array([0, 1]))
+        self.assertEqual(-0.5, state_neel_1.magnetisation())
+
+        state_neel_2  = SpinState(np.array([1, 0]))
+        self.assertEqual(0.5, state_neel_2.magnetisation())
+
+
+
     def test_energy(self):
-        
-        pass
+
+        self.assertEqual(
+            0,
+            self._test_state.energy(jz=0)
+        )
 
         self.assertEqual(
             - 0.25 + 0.25 - 0.25 + 0.25 + 0.25,
-            self._test_state.energy()
+            self._test_state.energy(jz=1)
         )
 
-
-class TestSector(unittest.TestCase):
+class TestBasisGeneration(unittest.TestCase):
 
     def test_basis_generation(self):
         sector = HeisenbergSector(
@@ -85,16 +100,38 @@ class TestSector(unittest.TestCase):
 
         self.assertListEqual(expected, actual)
 
-    def test_H_generation(self):
+
+    def test_hilbertspace_sizes(self):
+        """Setup basis for given setup and compare to M. Aichorn's results"""
+
+        # N = 8, nUp = 4 (Sz=0), Jz = 0
+        expected = 70
+        basis = HeisenbergSector(8, 4, 0).setup_basis()
+        self.assertEqual(expected, len(basis))        
+
+        # N = 14, nUp = 7 (Sz=0), Jz = 0
+        expected = 3432
+        basis = HeisenbergSector(14, 7, 0).setup_basis()
+        self.assertEqual(expected, len(basis))        
+
+        # N = 20, nUp = 10 (Sz=0), Jz = 0
+        expected = 184756
+        basis = HeisenbergSector(20, 10, 0).setup_basis()
+        self.assertEqual(expected, len(basis))
+
+
+class TestHamiltonianGeneration(unittest.TestCase):
+    def test_H_generation_J0(self):
+        
+        J = 0
+
         sector = HeisenbergSector(
             number_of_sites=4, 
             number_spinups=2, 
-            jz=1
+            jz=J
         )
 
-        sector.setup_hamiltonian()
-
-        J = sector.Jz
+        sector.setup_hamiltonian()        
 
         expected = np.array(
             [
@@ -109,27 +146,68 @@ class TestSector(unittest.TestCase):
 
         np.testing.assert_array_equal(expected, sector.H)
 
-    def test_lanczos_small(self):
-        
+    def test_H_generation_J1(self):
+        J = 1
+
         sector = HeisenbergSector(
             number_of_sites=4, 
             number_spinups=2, 
-            jz=1
+            jz=J
         )
+
+        sector.setup_hamiltonian()
+
+        
+        expected = np.array(
+            [
+                [0, 0.5, 0, 0, 0.5, 0 ], 
+                [0.5, -J, 0.5, 0.5, 0, 0.5 ],
+                [0, 0.5, 0, 0, 0.5, 0 ],
+                [0, 0.5, 0, 0, 0.5, 0 ],
+                [0.5, 0, 0.5, 0.5, -J, 0.5 ],
+                [0, 0.5, 0, 0, 0.5, 0 ]
+            ]
+        )
+
+        np.testing.assert_array_equal(expected, sector.H)
+
+    def test_H_generation_J2(self):
+        J = 2
+
+        sector = HeisenbergSector(
+            number_of_sites=4, 
+            number_spinups=2, 
+            jz=J
+        )
+
+        sector.setup_hamiltonian()
+
+        
+        expected = np.array(
+            [
+                [0, 0.5, 0, 0, 0.5, 0 ], 
+                [0.5, -J, 0.5, 0.5, 0, 0.5 ],
+                [0, 0.5, 0, 0, 0.5, 0 ],
+                [0, 0.5, 0, 0, 0.5, 0 ],
+                [0.5, 0, 0.5, 0.5, -J, 0.5 ],
+                [0, 0.5, 0, 0, 0.5, 0 ]
+            ]
+        )
+
+        np.testing.assert_array_equal(expected, sector.H)
+
+
+class TestDiagonalisation(unittest.TestCase):
+    def test_lanczos_small(self):
 
         A = np.array([[2, 1], [1, 2]])
         a = 1
         v = np.array([1,-1])
 
-        a_act, v_act, _ = sector.lanczos_diagonalisation(A)
+        a_act, v_act, _ = HeisenbergSector.lanczos_diagonalisation(A)
         self._assert_eig_result(a, v, a_act, v_act, 1E-4)
 
     def test_lanzos_middle(self):
-        sector = HeisenbergSector(
-            number_of_sites=4, 
-            number_spinups=2, 
-            jz=1
-        )
 
         A = np.array(
             [
@@ -143,9 +221,27 @@ class TestSector(unittest.TestCase):
         a = -12.0509
         v = np.array([0.204647, -0.04609, -0.246984, -0.267927, 1])
 
-        a_act, v_act, _ = sector.lanczos_diagonalisation(A)
+        a_act, v_act, _ = HeisenbergSector.lanczos_diagonalisation(A)
         self._assert_eig_result(a, v, a_act, v_act, 1E-4)
         
+
+    def test_lanczos_random_10x10(self):
+        N = 10
+        
+        # create a hermitian matrix
+        A = np.random.rand(N, N)
+        A = A + A.T
+
+        # expected:
+        energies, vectors = np.linalg.eigh(A)
+        E_expected = energies[0]
+        v_expected = vectors[0]
+
+        # actual:
+        E_actual, v_actual, _ = HeisenbergSector.lanczos_diagonalisation(A)
+
+        self._assert_eig_result(E_expected, v_expected, E_actual, v_actual)
+
 
     
     def _assert_eig_result(self, a, v, a_act, v_act, delta=1E-7):
@@ -163,6 +259,20 @@ class TestSector(unittest.TestCase):
         rhs = np.sqrt(np.sum(a**2)) + np.sqrt(np.sum(b**2))
 
         self.assertTrue((lhs - rhs) < delta)
+
+    def test_highlevel_N2(self):
+        sector = HeisenbergSector(
+            number_of_sites=2,
+            number_spinups=1,
+            jz=1
+        )
+
+        E, ground_state = sector.calculate_ground_state()
+
+        self.assertEqual(0, ground_state.magnetisation())
+        self.assertEqual(0.25, ground_state.magnetisation_squared())
+        
+
 
     def test_highlevel_N6_Jz0_Sz0(self):
         """
