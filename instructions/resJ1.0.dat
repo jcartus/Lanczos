@@ -1,0 +1,566 @@
+
+ =============================================
+ Calculation for N =  2 lattice sites and Sz =  0
+ Parameters:
+ Jz =    1.000, Jp =    1.000
+ Dimension of Hilbert space =     2
+ it =   1;  E =  -1.50000000
+Matrix diagonal im Schritt   1
+ magnetisation site  1 = -0.00000
+ magnetisation site  2 =  0.00000
+
+ Magnetisation:     -0.00000000
+ Magnetisation**2:   0.25000000
+
+ Spin correlation function
+   1    0.25000000
+   2   -0.25000000
+ 
+
+ =============================================
+ Calculation for N =  4 lattice sites and Sz =  0
+ Parameters:
+ Jz =    1.000, Jp =    1.000
+ Dimension of Hilbert space =     6
+ it =   1;  E =  -0.51857965
+ it =   2;  E =  -1.51390741
+ it =   3;  E =  -2.00000000
+Matrix diagonal im Schritt   3
+ magnetisation site  1 =  0.00000
+ magnetisation site  2 = -0.00000
+ magnetisation site  3 =  0.00000
+ magnetisation site  4 = -0.00000
+
+ Magnetisation:      0.00000000
+ Magnetisation**2:   0.16666667
+
+ Spin correlation function
+   1    0.25000000
+   2   -0.16666667
+   3    0.08333333
+   4   -0.16666667
+ 
+
+ =============================================
+ Calculation for N =  6 lattice sites and Sz =  0
+ Parameters:
+ Jz =    1.000, Jp =    1.000
+ Dimension of Hilbert space =    20
+ it =   1;  E =  -1.03122608
+ it =   2;  E =  -2.17941038
+ it =   3;  E =  -2.55760031
+ it =   4;  E =  -2.72479392
+ it =   5;  E =  -2.79352249
+ it =   6;  E =  -2.80226305
+ it =   7;  E =  -2.80269712
+ it =   8;  E =  -2.80277271
+ it =   9;  E =  -2.80277544
+ it =  10;  E =  -2.80277563
+ it =  11;  E =  -2.80277564
+Genauigkeit erreicht im Schritt  11
+ magnetisation site  1 =  0.00000
+ magnetisation site  2 = -0.00000
+ magnetisation site  3 =  0.00000
+ magnetisation site  4 = -0.00000
+ magnetisation site  5 =  0.00000
+ magnetisation site  6 = -0.00000
+
+ Magnetisation:      0.00000010
+ Magnetisation**2:   0.12955849
+
+ Spin correlation function
+   1    0.25000000
+   2   -0.15570983
+   3    0.06933792
+   4   -0.07725597
+   5    0.06933766
+   6   -0.15570978
+ 
+
+ =============================================
+ Calculation for N =  8 lattice sites and Sz =  0
+ Parameters:
+ Jz =    1.000, Jp =    1.000
+ Dimension of Hilbert space =    70
+ it =   1;  E =  -1.50936763
+ it =   2;  E =  -2.81427308
+ it =   3;  E =  -3.49390340
+ it =   4;  E =  -3.62052646
+ it =   5;  E =  -3.64047979
+ it =   6;  E =  -3.64690323
+ it =   7;  E =  -3.64952447
+ it =   8;  E =  -3.65073835
+ it =   9;  E =  -3.65102336
+ it =  10;  E =  -3.65107404
+ it =  11;  E =  -3.65108955
+ it =  12;  E =  -3.65109302
+ it =  13;  E =  -3.65109335
+ it =  14;  E =  -3.65109340
+ it =  15;  E =  -3.65109341
+ it =  16;  E =  -3.65109341
+Genauigkeit erreicht im Schritt  16
+ magnetisation site  1 =  0.00000
+ magnetisation site  2 =  0.00000
+ magnetisation site  3 = -0.00000
+ magnetisation site  4 = -0.00000
+ magnetisation site  5 =  0.00000
+ magnetisation site  6 =  0.00000
+ magnetisation site  7 = -0.00000
+ magnetisation site  8 = -0.00000
+
+ Magnetisation:     -0.00000022
+ Magnetisation**2:   0.10755714
+
+ Spin correlation function
+   1    0.25000000
+   2   -0.15212924
+   3    0.06526008
+   4   -0.06298516
+   5    0.04970858
+   6   -0.06298465
+   7    0.06525964
+   8   -0.15212925
+ 
+
+ =============================================
+ Calculation for N = 10 lattice sites and Sz =  0
+ Parameters:
+ Jz =    1.000, Jp =    1.000
+ Dimension of Hilbert space =   252
+ it =   1;  E =  -1.38140397
+ it =   2;  E =  -2.99072093
+ it =   3;  E =  -3.75527617
+ it =   4;  E =  -3.98105136
+ it =   5;  E =  -4.05250103
+ it =   6;  E =  -4.07645861
+ it =   7;  E =  -4.09152217
+ it =   8;  E =  -4.10706582
+ it =   9;  E =  -4.13946824
+ it =  10;  E =  -4.29840350
+ it =  11;  E =  -4.45553265
+ it =  12;  E =  -4.50001295
+ it =  13;  E =  -4.51025148
+ it =  14;  E =  -4.51381560
+ it =  15;  E =  -4.51509278
+ it =  16;  E =  -4.51536464
+ it =  17;  E =  -4.51542680
+ it =  18;  E =  -4.51544302
+ it =  19;  E =  -4.51544592
+ it =  20;  E =  -4.51544629
+ it =  21;  E =  -4.51544634
+ it =  22;  E =  -4.51544635
+Genauigkeit erreicht im Schritt  22
+ magnetisation site  1 =  0.00000
+ magnetisation site  2 = -0.00000
+ magnetisation site  3 = -0.00000
+ magnetisation site  4 = -0.00000
+ magnetisation site  5 = -0.00000
+ magnetisation site  6 =  0.00000
+ magnetisation site  7 = -0.00000
+ magnetisation site  8 = -0.00000
+ magnetisation site  9 = -0.00000
+ magnetisation site 10 =  0.00000
+
+ Magnetisation:     -0.00000100
+ Magnetisation**2:   0.09271368
+
+ Spin correlation function
+   1    0.25000000
+   2   -0.15051575
+   3    0.06351718
+   4   -0.05779326
+   5    0.04326848
+   6   -0.04695354
+   7    0.04326771
+   8   -0.05779346
+   9    0.06351643
+  10   -0.15051380
+ 
+
+ =============================================
+ Calculation for N = 12 lattice sites and Sz =  0
+ Parameters:
+ Jz =    1.000, Jp =    1.000
+ Dimension of Hilbert space =   924
+ it =   1;  E =  -1.64355253
+ it =   2;  E =  -3.31208800
+ it =   3;  E =  -4.30789600
+ it =   4;  E =  -4.78753521
+ it =   5;  E =  -5.02202625
+ it =   6;  E =  -5.17422208
+ it =   7;  E =  -5.26440959
+ it =   8;  E =  -5.31960203
+ it =   9;  E =  -5.35145257
+ it =  10;  E =  -5.36770390
+ it =  11;  E =  -5.37716699
+ it =  12;  E =  -5.38324642
+ it =  13;  E =  -5.38616149
+ it =  14;  E =  -5.38698315
+ it =  15;  E =  -5.38723005
+ it =  16;  E =  -5.38732326
+ it =  17;  E =  -5.38736281
+ it =  18;  E =  -5.38738062
+ it =  19;  E =  -5.38738813
+ it =  20;  E =  -5.38739031
+ it =  21;  E =  -5.38739078
+ it =  22;  E =  -5.38739088
+ it =  23;  E =  -5.38739091
+ it =  24;  E =  -5.38739092
+Genauigkeit erreicht im Schritt  24
+ magnetisation site  1 = -0.00001
+ magnetisation site  2 =  0.00001
+ magnetisation site  3 = -0.00001
+ magnetisation site  4 =  0.00000
+ magnetisation site  5 =  0.00000
+ magnetisation site  6 = -0.00000
+ magnetisation site  7 =  0.00000
+ magnetisation site  8 = -0.00000
+ magnetisation site  9 =  0.00001
+ magnetisation site 10 = -0.00000
+ magnetisation site 11 =  0.00000
+ magnetisation site 12 =  0.00000
+
+ Magnetisation:     -0.00000071
+ Magnetisation**2:   0.08190805
+
+ Spin correlation function
+   1    0.25000000
+   2   -0.14965170
+   3    0.06261193
+   4   -0.05527268
+   5    0.04028389
+   6   -0.04080226
+   7    0.03566112
+   8   -0.04080226
+   9    0.04028371
+  10   -0.05527355
+  11    0.06261050
+  12   -0.14964870
+ 
+
+ =============================================
+ Calculation for N = 14 lattice sites and Sz =  0
+ Parameters:
+ Jz =    1.000, Jp =    1.000
+ Dimension of Hilbert space =  3432
+ it =   1;  E =  -1.55855209
+ it =   2;  E =  -3.36801826
+ it =   3;  E =  -4.72608787
+ it =   4;  E =  -5.63376705
+ it =   5;  E =  -6.02374561
+ it =   6;  E =  -6.15272081
+ it =   7;  E =  -6.20356354
+ it =   8;  E =  -6.23063277
+ it =   9;  E =  -6.24587752
+ it =  10;  E =  -6.25334600
+ it =  11;  E =  -6.25748970
+ it =  12;  E =  -6.26021562
+ it =  13;  E =  -6.26181537
+ it =  14;  E =  -6.26265148
+ it =  15;  E =  -6.26313868
+ it =  16;  E =  -6.26338693
+ it =  17;  E =  -6.26349154
+ it =  18;  E =  -6.26352820
+ it =  19;  E =  -6.26353986
+ it =  20;  E =  -6.26354466
+ it =  21;  E =  -6.26354718
+ it =  22;  E =  -6.26354854
+ it =  23;  E =  -6.26354919
+ it =  24;  E =  -6.26354942
+ it =  25;  E =  -6.26354949
+ it =  26;  E =  -6.26354952
+ it =  27;  E =  -6.26354953
+Genauigkeit erreicht im Schritt  27
+ magnetisation site  1 = -0.00001
+ magnetisation site  2 =  0.00001
+ magnetisation site  3 = -0.00000
+ magnetisation site  4 = -0.00000
+ magnetisation site  5 =  0.00000
+ magnetisation site  6 = -0.00001
+ magnetisation site  7 =  0.00001
+ magnetisation site  8 = -0.00001
+ magnetisation site  9 =  0.00001
+ magnetisation site 10 = -0.00001
+ magnetisation site 11 = -0.00000
+ magnetisation site 12 =  0.00001
+ magnetisation site 13 = -0.00001
+ magnetisation site 14 =  0.00001
+
+ Magnetisation:      0.00000040
+ Magnetisation**2:   0.07363800
+
+ Spin correlation function
+   1    0.25000000
+   2   -0.14913386
+   3    0.06208219
+   4   -0.05385162
+   5    0.03864373
+   6   -0.03770332
+   7    0.03200895
+   8   -0.03409772
+   9    0.03200891
+  10   -0.03770134
+  11    0.03864283
+  12   -0.05384911
+  13    0.06208069
+  14   -0.14913033
+ 
+
+ =============================================
+ Calculation for N = 16 lattice sites and Sz =  0
+ Parameters:
+ Jz =    1.000, Jp =    1.000
+ Dimension of Hilbert space = 12870
+ it =   1;  E =  -1.66057073
+ it =   2;  E =  -3.51127097
+ it =   3;  E =  -4.74439898
+ it =   4;  E =  -5.64084742
+ it =   5;  E =  -6.22491094
+ it =   6;  E =  -6.57356624
+ it =   7;  E =  -6.74846062
+ it =   8;  E =  -6.83698457
+ it =   9;  E =  -6.90035381
+ it =  10;  E =  -6.95896134
+ it =  11;  E =  -7.01233278
+ it =  12;  E =  -7.05466124
+ it =  13;  E =  -7.08667936
+ it =  14;  E =  -7.10968023
+ it =  15;  E =  -7.12357370
+ it =  16;  E =  -7.13106788
+ it =  17;  E =  -7.13555145
+ it =  18;  E =  -7.13854794
+ it =  19;  E =  -7.14042711
+ it =  20;  E =  -7.14141003
+ it =  21;  E =  -7.14186894
+ it =  22;  E =  -7.14209151
+ it =  23;  E =  -7.14220025
+ it =  24;  E =  -7.14225314
+ it =  25;  E =  -7.14227833
+ it =  26;  E =  -7.14228902
+ it =  27;  E =  -7.14229323
+ it =  28;  E =  -7.14229502
+ it =  29;  E =  -7.14229585
+ it =  30;  E =  -7.14229618
+ it =  31;  E =  -7.14229630
+ it =  32;  E =  -7.14229634
+ it =  33;  E =  -7.14229635
+ it =  34;  E =  -7.14229636
+Genauigkeit erreicht im Schritt  34
+ magnetisation site  1 = -0.00000
+ magnetisation site  2 =  0.00000
+ magnetisation site  3 = -0.00000
+ magnetisation site  4 =  0.00000
+ magnetisation site  5 =  0.00000
+ magnetisation site  6 = -0.00000
+ magnetisation site  7 = -0.00000
+ magnetisation site  8 =  0.00000
+ magnetisation site  9 = -0.00000
+ magnetisation site 10 =  0.00000
+ magnetisation site 11 =  0.00000
+ magnetisation site 12 = -0.00000
+ magnetisation site 13 =  0.00000
+ magnetisation site 14 = -0.00000
+ magnetisation site 15 = -0.00000
+ magnetisation site 16 =  0.00000
+
+ Magnetisation:     -0.00000050
+ Magnetisation**2:   0.06706607
+
+ Spin correlation function
+   1    0.25000000
+   2   -0.14879683
+   3    0.06174106
+   4   -0.05295783
+   5    0.03763177
+   6   -0.03588557
+   7    0.02992701
+   8   -0.03062511
+   9    0.02793086
+  10   -0.03062435
+  11    0.02992674
+  12   -0.03588526
+  13    0.03763205
+  14   -0.05295830
+  15    0.06174105
+  16   -0.14879728
+ 
+
+ =============================================
+ Calculation for N = 18 lattice sites and Sz =  0
+ Parameters:
+ Jz =    1.000, Jp =    1.000
+ Dimension of Hilbert space = 48620
+ it =   1;  E =  -1.60634136
+ it =   2;  E =  -3.48901152
+ it =   3;  E =  -4.76610397
+ it =   4;  E =  -5.68000785
+ it =   5;  E =  -6.34527587
+ it =   6;  E =  -6.80891862
+ it =   7;  E =  -7.13777815
+ it =   8;  E =  -7.40046212
+ it =   9;  E =  -7.61110345
+ it =  10;  E =  -7.76051664
+ it =  11;  E =  -7.86064136
+ it =  12;  E =  -7.92436719
+ it =  13;  E =  -7.96283562
+ it =  14;  E =  -7.98594613
+ it =  15;  E =  -8.00043087
+ it =  16;  E =  -8.00996404
+ it =  17;  E =  -8.01591938
+ it =  18;  E =  -8.01930403
+ it =  19;  E =  -8.02101988
+ it =  20;  E =  -8.02183299
+ it =  21;  E =  -8.02222201
+ it =  22;  E =  -8.02241661
+ it =  23;  E =  -8.02251991
+ it =  24;  E =  -8.02258487
+ it =  25;  E =  -8.02263692
+ it =  26;  E =  -8.02268231
+ it =  27;  E =  -8.02271496
+ it =  28;  E =  -8.02273349
+ it =  29;  E =  -8.02274248
+ it =  30;  E =  -8.02274641
+ it =  31;  E =  -8.02274803
+ it =  32;  E =  -8.02274866
+ it =  33;  E =  -8.02274890
+ it =  34;  E =  -8.02274899
+ it =  35;  E =  -8.02274904
+ it =  36;  E =  -8.02274906
+ it =  37;  E =  -8.02274908
+ it =  38;  E =  -8.02274908
+Genauigkeit erreicht im Schritt  38
+ magnetisation site  1 = -0.00001
+ magnetisation site  2 = -0.00000
+ magnetisation site  3 =  0.00000
+ magnetisation site  4 = -0.00000
+ magnetisation site  5 =  0.00000
+ magnetisation site  6 = -0.00000
+ magnetisation site  7 =  0.00000
+ magnetisation site  8 =  0.00000
+ magnetisation site  9 =  0.00000
+ magnetisation site 10 =  0.00000
+ magnetisation site 11 =  0.00000
+ magnetisation site 12 =  0.00000
+ magnetisation site 13 =  0.00000
+ magnetisation site 14 =  0.00000
+ magnetisation site 15 = -0.00000
+ magnetisation site 16 = -0.00000
+ magnetisation site 17 = -0.00001
+ magnetisation site 18 =  0.00000
+
+ Magnetisation:     -0.00000107
+ Magnetisation**2:   0.06170793
+
+ Spin correlation function
+   1    0.25000000
+   2   -0.14856802
+   3    0.06151334
+   4   -0.05236562
+   5    0.03696922
+   6   -0.03472713
+   7    0.02862385
+   8   -0.02856300
+   9    0.02557734
+  10   -0.02691620
+  11    0.02557796
+  12   -0.02856389
+  13    0.02862308
+  14   -0.03472604
+  15    0.03696849
+  16   -0.05236537
+  17    0.06151308
+  18   -0.14857112
+ 
+
+ =============================================
+ Calculation for N = 20 lattice sites and Sz =  0
+ Parameters:
+ Jz =    1.000, Jp =    1.000
+ Dimension of Hilbert space = 184756
+ it =   1;  E =  -1.63824059
+ it =   2;  E =  -3.68153858
+ it =   3;  E =  -5.15476033
+ it =   4;  E =  -6.27925598
+ it =   5;  E =  -7.13964558
+ it =   6;  E =  -7.79652378
+ it =   7;  E =  -8.28135733
+ it =   8;  E =  -8.58860104
+ it =   9;  E =  -8.74946843
+ it =  10;  E =  -8.82698183
+ it =  11;  E =  -8.86453278
+ it =  12;  E =  -8.88311820
+ it =  13;  E =  -8.89215764
+ it =  14;  E =  -8.89663084
+ it =  15;  E =  -8.89909640
+ it =  16;  E =  -8.90070403
+ it =  17;  E =  -8.90187574
+ it =  18;  E =  -8.90272566
+ it =  19;  E =  -8.90330623
+ it =  20;  E =  -8.90368336
+ it =  21;  E =  -8.90393348
+ it =  22;  E =  -8.90410619
+ it =  23;  E =  -8.90422003
+ it =  24;  E =  -8.90429023
+ it =  25;  E =  -8.90433107
+ it =  26;  E =  -8.90435431
+ it =  27;  E =  -8.90436795
+ it =  28;  E =  -8.90437603
+ it =  29;  E =  -8.90438068
+ it =  30;  E =  -8.90438327
+ it =  31;  E =  -8.90438469
+ it =  32;  E =  -8.90438547
+ it =  33;  E =  -8.90438592
+ it =  34;  E =  -8.90438618
+ it =  35;  E =  -8.90438634
+ it =  36;  E =  -8.90438643
+ it =  37;  E =  -8.90438647
+ it =  38;  E =  -8.90438650
+ it =  39;  E =  -8.90438652
+ it =  40;  E =  -8.90438652
+Genauigkeit erreicht im Schritt  40
+ magnetisation site  1 =  0.00001
+ magnetisation site  2 = -0.00000
+ magnetisation site  3 =  0.00001
+ magnetisation site  4 = -0.00000
+ magnetisation site  5 =  0.00001
+ magnetisation site  6 = -0.00001
+ magnetisation site  7 =  0.00001
+ magnetisation site  8 = -0.00001
+ magnetisation site  9 =  0.00001
+ magnetisation site 10 = -0.00000
+ magnetisation site 11 = -0.00001
+ magnetisation site 12 =  0.00001
+ magnetisation site 13 = -0.00001
+ magnetisation site 14 =  0.00001
+ magnetisation site 15 = -0.00001
+ magnetisation site 16 =  0.00000
+ magnetisation site 17 = -0.00000
+ magnetisation site 18 =  0.00000
+ magnetisation site 19 = -0.00000
+ magnetisation site 20 =  0.00000
+
+ Magnetisation:      0.00000131
+ Magnetisation**2:   0.05723626
+
+ Spin correlation function
+   1    0.25000000
+   2   -0.14840679
+   3    0.06135106
+   4   -0.05194982
+   5    0.03650461
+   6   -0.03393521
+   7    0.02774203
+   8   -0.02721723
+   9    0.02407035
+  10   -0.02467384
+  11    0.02302483
+  12   -0.02467223
+  13    0.02407033
+  14   -0.02721644
+  15    0.02774262
+  16   -0.03393470
+  17    0.03650630
+  18   -0.05194992
+  19    0.06135184
+  20   -0.14840780
+ 
