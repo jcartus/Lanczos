@@ -1,7 +1,7 @@
 from utilities import Experiment, Printer
 from utilities import InfoStream as info
 import matplotlib.pyplot as plt
-
+import numpy as np
 
 def main():
 
@@ -12,8 +12,14 @@ def main():
     L_max = 10#16
     L_step = 1
 
+    export = False
+
     file_name = "results"
 
+    seed = 0
+    if seed:
+        info.message("Setting seed to " + str(seed), 1)
+        np.random.seed(13)
 
     experiments = []
     for jz in Jz:
@@ -24,7 +30,10 @@ def main():
 
     info.message("Calculation finished. Start plotting ...", 2)
 
-    Printer.export_all(experiments, file_name + ".txt", file_name + ".png")
+    if export:
+        Printer.export_all(experiments, file_name + ".txt", file_name + ".png")
+    else:
+        Printer.plot_all(experiments)
 
     plt.show()
 
