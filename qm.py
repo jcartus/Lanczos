@@ -116,8 +116,8 @@ class HeisenbergSector(object):
             H, 
             n_max=None, 
             n_diag=None, 
-            delta_E=1E-7, 
-            delta_k=1E-15
+            delta_E=1E-10, 
+            delta_k=1E-25
         ):
         
         L = len(H)
@@ -184,11 +184,12 @@ class HeisenbergSector(object):
 
         #--- calculate coefficients in spin basis ---
         c = np.zeros(L)
-        c_krylov = np.linalg.eigh(H_t)[1][0]
+        c_krylov = np.linalg.eigh(H_t)[1][:, 0]
+
         x = x_start
         x_old = 0
 
-        for i in range(n):
+        for i in range(len(c_krylov)):
             x  = x / k[i]
             c += c_krylov[i] * x
 
@@ -373,3 +374,4 @@ def simulate_heisenberg_model(L, jz):
     )
 
     return result
+
