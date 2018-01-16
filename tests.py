@@ -121,6 +121,18 @@ class TestBasisGeneration(unittest.TestCase):
 
 
 class TestHamiltonianGeneration(unittest.TestCase):
+
+    def test_generate_2SpinSystem_Sz0(self):
+        """Setup H for 2 spin-system and compare results to what is given
+        in the script for Sz_tot = 0 (center of the matrix)"""
+        # Sz = 0
+        for Jz in [0, 1, 2]: 
+            #expected = np.array([[-Jz/4, 1/2], [1/2, -Jz/4]]) # laut skript
+            expected = np.array([[-Jz/2, 1], [1, -Jz/2]]) # was ich mir so denk
+            H = HeisenbergSector(2, 1, Jz).setup_hamiltonian()
+            np.testing.assert_array_almost_equal(expected, H)
+
+
     def test_H_generation_J0(self):
         
         J = 0
@@ -226,6 +238,7 @@ class TestDiagonalisation(unittest.TestCase):
         
 
     def test_lanczos_random_10x10(self):
+
         N = 10
         
         # create a hermitian matrix
@@ -235,14 +248,12 @@ class TestDiagonalisation(unittest.TestCase):
         # expected:
         energies, vectors = np.linalg.eigh(A)
         E_expected = energies[0]
-        v_expected = vectors[0]
+        v_expected = vectors[:, 0]
 
         # actual:
         E_actual, v_actual, _ = HeisenbergSector.lanczos_diagonalisation(A)
 
         self._assert_eig_result(E_expected, v_expected, E_actual, v_actual)
-
-
     
     def _assert_eig_result(self, a, v, a_act, v_act, delta=1E-7):
         
@@ -255,12 +266,13 @@ class TestDiagonalisation(unittest.TestCase):
 
         self.assertEqual(len(a), len(b))
 
-        lhs = np.dot(a, b)
-        rhs = np.sqrt(np.sum(a**2)) + np.sqrt(np.sum(b**2))
-
-        self.assertTrue((lhs - rhs) < delta)
+        # vectors can only differ by a constant factor in all elements
+        self.assertAlmostEqual(np.var(a / b), 0, delta=delta)
 
     def test_highlevel_N2(self):
+
+        # todo
+
         sector = HeisenbergSector(
             number_of_sites=2,
             number_spinups=1,
@@ -269,8 +281,8 @@ class TestDiagonalisation(unittest.TestCase):
 
         E, ground_state = sector.calculate_ground_state()
 
-        self.assertEqual(0, ground_state.magnetisation())
-        self.assertEqual(0.25, ground_state.magnetisation_squared())
+        self.assertAlmostEqual(0, ground_state.magnetisation(), delta=1E-7)
+        self.assertAlmostEqual(0.25, ground_state.magnetisation_squared(), delta=1E-7)
         
 
 
@@ -302,8 +314,6 @@ class TestDiagonalisation(unittest.TestCase):
 
         # check iterations
         self.assertTrue(steps <= steps_expected)
-
-        self.skipTest("Something is not right here")
 
         # check energy
         self.assertAlmostEqual(E_expected, E, delta=1E-4)
