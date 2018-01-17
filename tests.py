@@ -119,7 +119,6 @@ class TestBasisGeneration(unittest.TestCase):
         basis = HeisenbergSector(20, 10, 0).setup_basis()
         self.assertEqual(expected, len(basis))
 
-
 class TestHamiltonianGeneration(unittest.TestCase):
 
     def test_generate_2SpinSystem_Sz0(self):
@@ -133,82 +132,29 @@ class TestHamiltonianGeneration(unittest.TestCase):
             np.testing.assert_array_almost_equal(expected, H)
 
 
-    def test_H_generation_J0(self):
+    def test_H_generation_N4_nUp2(self):
         
-        J = 0
+        for J in [0, 1, 2]:
+            sector = HeisenbergSector(
+                number_of_sites=4, 
+                number_spinups=2, 
+                jz=J
+            )
 
-        sector = HeisenbergSector(
-            number_of_sites=4, 
-            number_spinups=2, 
-            jz=J
-        )
+            sector.setup_hamiltonian()        
 
-        sector.setup_hamiltonian()        
+            expected = np.array(
+                [
+                    [0, 0.5, 0, 0, 0.5, 0 ], 
+                    [0.5, -J, 0.5, 0.5, 0, 0.5 ],
+                    [0, 0.5, 0, 0, 0.5, 0 ],
+                    [0, 0.5, 0, 0, 0.5, 0 ],
+                    [0.5, 0, 0.5, 0.5, -J, 0.5 ],
+                    [0, 0.5, 0, 0, 0.5, 0 ]
+                ]
+            )
 
-        expected = np.array(
-            [
-                [0, 0.5, 0, 0, 0.5, 0 ], 
-                [0.5, -J, 0.5, 0.5, 0, 0.5 ],
-                [0, 0.5, 0, 0, 0.5, 0 ],
-                [0, 0.5, 0, 0, 0.5, 0 ],
-                [0.5, 0, 0.5, 0.5, -J, 0.5 ],
-                [0, 0.5, 0, 0, 0.5, 0 ]
-            ]
-        )
-
-        np.testing.assert_array_equal(expected, sector.H)
-
-    def test_H_generation_J1(self):
-        J = 1
-
-        sector = HeisenbergSector(
-            number_of_sites=4, 
-            number_spinups=2, 
-            jz=J
-        )
-
-        sector.setup_hamiltonian()
-
-        
-        expected = np.array(
-            [
-                [0, 0.5, 0, 0, 0.5, 0 ], 
-                [0.5, -J, 0.5, 0.5, 0, 0.5 ],
-                [0, 0.5, 0, 0, 0.5, 0 ],
-                [0, 0.5, 0, 0, 0.5, 0 ],
-                [0.5, 0, 0.5, 0.5, -J, 0.5 ],
-                [0, 0.5, 0, 0, 0.5, 0 ]
-            ]
-        )
-
-        np.testing.assert_array_equal(expected, sector.H)
-
-    def test_H_generation_J2(self):
-        J = 2
-
-        sector = HeisenbergSector(
-            number_of_sites=4, 
-            number_spinups=2, 
-            jz=J
-        )
-
-        sector.setup_hamiltonian()
-
-        
-        expected = np.array(
-            [
-                [0, 0.5, 0, 0, 0.5, 0 ], 
-                [0.5, -J, 0.5, 0.5, 0, 0.5 ],
-                [0, 0.5, 0, 0, 0.5, 0 ],
-                [0, 0.5, 0, 0, 0.5, 0 ],
-                [0.5, 0, 0.5, 0.5, -J, 0.5 ],
-                [0, 0.5, 0, 0, 0.5, 0 ]
-            ]
-        )
-
-        np.testing.assert_array_equal(expected, sector.H)
-
-
+            np.testing.assert_array_equal(expected, sector.H)
 class TestDiagonalisation(unittest.TestCase):
     def test_lanczos_small(self):
 
@@ -325,7 +271,53 @@ class TestDiagonalisation(unittest.TestCase):
         for exp, act in zip(correlation_expected, ground_state.correlation()):
             self.assertAlmostEqual(exp, act, delta=1E-2)
 
+    def test_highlevel_N10_J2_Sz0(self):
+        """
+        N=10,
+        Sz=0 => Nup=5,
+        Jz=2
 
+        Lt. Markus Aichhorn diagonal in 21 Schritten
+        """
+
+        sector = HeisenbergSector(
+            number_of_sites=10,
+            number_spinups=5,
+            jz=2
+        )
+
+        steps_expected = 21
+        E_expected = -6.24458366
+        m_expected = 0.0
+        m2_expected = 0.15776331
+        correlation_expected = [
+            0.25, 
+            -0.19414343, 
+            0.14145689, 
+            -0.13587744, 
+            0.12795200,
+            -0.12877517,
+            0.12795171,
+            -0.13587788,
+            0.14145712,
+            -0.19414381
+        ]
+
+        E, ground_state, steps = \
+            sector.calculate_ground_state(give_iterations=True)
+
+        # check iterations
+        self.assertTrue(steps <= steps_expected)
+
+        # check energy
+        self.assertAlmostEqual(E_expected, E, delta=1E-4)
+
+        # check magnetisations
+        self.assertAlmostEqual(m_expected, ground_state.magnetisation(), delta=1E-4)
+        self.assertAlmostEqual(m2_expected, ground_state.magnetisation_squared(), delta=1E-2)
+
+        for exp, act in zip(correlation_expected, ground_state.correlation()):
+            self.assertAlmostEqual(exp, act, delta=1E-2)
 
 
 
