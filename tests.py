@@ -11,14 +11,14 @@ import unittest
 import numpy as np
 
 from utilities import InfoStream
-from qm import SpinState, Sector, simulate_heisenberg_model
+from qm import BasisState, Sector, simulate_heisenberg_model
 
-class TestStates(unittest.TestCase):
+class TestBasisStates(unittest.TestCase):
     """This will test the basis state's functionality (Magnetisation, etc.)."""
 
     def setUp(self):
 
-        self._test_state = SpinState(state=np.array([1, 0, 0, 1, 1]))
+        self._test_state = BasisState(state=np.array([1, 0, 0, 1, 1]))
 
     def test_bin_to_dec(self):
         #carefull lowest bit at index 0, i.e. at the left ;)
@@ -31,7 +31,7 @@ class TestStates(unittest.TestCase):
         expected = [18, 5, 25]
 
         # init with some random value
-        state = SpinState(2,4)
+        state = BasisState(2,4)
         
         for (b,e) in zip(bin, expected):
             self.assertEqual(e, state._binary_to_decimal(b))
@@ -47,7 +47,7 @@ class TestStates(unittest.TestCase):
         ]
 
         # init with some random value
-        state = SpinState(2,4)
+        state = BasisState(2,4)
         
         for (d,e) in zip(decimal, expected):
             self.assertListEqual(list(e), list(state._decimal_to_binary(*d)))
@@ -63,13 +63,13 @@ class TestStates(unittest.TestCase):
         )
 
     def test_magnetisation_two_spins(self):
-        state_all_up = SpinState(np.array([1, 1]))
+        state_all_up = BasisState(np.array([1, 1]))
         self.assertEqual(0, state_all_up.magnetisation())
 
-        state_neel_1 =  SpinState(np.array([0, 1]))
+        state_neel_1 =  BasisState(np.array([0, 1]))
         self.assertEqual(-0.5, state_neel_1.magnetisation())
 
-        state_neel_2  = SpinState(np.array([1, 0]))
+        state_neel_2  = BasisState(np.array([1, 0]))
         self.assertEqual(0.5, state_neel_2.magnetisation())
 
     def test_energy(self):

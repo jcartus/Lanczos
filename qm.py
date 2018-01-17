@@ -1,3 +1,11 @@
+"""This module contains the quantum mechanical core of the project. It has 
+representations of the systems and its states as well as 
+a function to start the simulation of a system.
+
+Author:
+    Johannes Cartus, TU Graz
+"""
+
 import numpy as np
 from scipy.sparse import dok_matrix
 import math
@@ -6,6 +14,8 @@ import utilities
 
 
 class Sector(object):
+    """A subsets of all possible states in a system with given lattice 
+    size, i.e. all states with a specified number of spin-ups"""
 
     def __init__(self, number_of_sites, number_spinups, jz):
 
@@ -29,7 +39,7 @@ class Sector(object):
             bits = shift_right(pos, bits)
 
             # lowest state in this recursion
-            basis.append(SpinState(bits))
+            basis.append(BasisState(bits))
 
             # continue recursion if limit not reached
             if pos > 1:
@@ -63,7 +73,7 @@ class Sector(object):
 
         # if all spins are up only one state possible
         if self.number_spinups == self.number_of_sites:
-            basis.append(SpinState(np.ones(self.number_spinups)))
+            basis.append(BasisState(np.ones(self.number_spinups)))
             self.basis = basis
             return basis
 
@@ -71,7 +81,7 @@ class Sector(object):
 
         # 1. state
         basis.append(
-            SpinState(2**self.number_spinups -1, self.number_of_sites - 1)
+            BasisState(2**self.number_spinups -1, self.number_of_sites - 1)
         )
 
         while pos < self.number_of_sites:       
@@ -206,7 +216,7 @@ class Sector(object):
         self.setup_hamiltonian()
         E, c, n = self.lanczos_diagonalisation(self.H)
 
-        groundstate = MixedState(c, self.basis)
+        groundstate = ComposedState(c, self.basis)
 
         if give_iterations:
             return E, groundstate, give_iterations
@@ -214,8 +224,8 @@ class Sector(object):
             return E, groundstate
 
 
-class SpinState(object):
-    
+class BasisState(object):
+    """The basis states of the system"""
     def __init__(self, state, msb=None):
         """state .. either array of bits or int (in which case msb should be 
         specifed)"""
@@ -249,7 +259,7 @@ class SpinState(object):
             flipped_seq[ind], flipped_seq[(ind + 1) % (self.msb + 1)] = \
                 flipped_seq[(ind + 1) % (self.msb + 1)], flipped_seq[ind]
 
-            flip_states.append(SpinState(flipped_seq))
+            flip_states.append(BasisState(flipped_seq))
         
         return flip_states
         
@@ -303,7 +313,10 @@ class SpinState(object):
         sz = self.bit_seq - 0.5
         return sz[0] * sz
 
-class MixedState(object):
+class ComposedState(object):
+    """A state of the system that consists of a linear combination of 
+    basis states.
+    """
 
     def __init__(self, coeffs, basis):
         self._basis = basis
