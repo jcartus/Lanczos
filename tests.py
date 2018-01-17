@@ -1,7 +1,9 @@
 """
-Todo:
-    - tests für correlation in spin und composed states
+Description:
+    This module provides unit tests for the functionality provided in qm.py
 
+Author:
+    Johannes Cartus, TU Graz
 """
 
 import unittest
@@ -9,9 +11,10 @@ import unittest
 import numpy as np
 
 from utilities import InfoStream
-from qm import SpinState, HeisenbergSector, simulate_heisenberg_model
+from qm import SpinState, Sector, simulate_heisenberg_model
 
 class TestStates(unittest.TestCase):
+    """This will test the basis state's functionality (Magnetisation, etc.)."""
 
     def setUp(self):
 
@@ -60,7 +63,6 @@ class TestStates(unittest.TestCase):
         )
 
     def test_magnetisation_two_spins(self):
-        """<M> shloud be zero for all states """
         state_all_up = SpinState(np.array([1, 1]))
         self.assertEqual(0, state_all_up.magnetisation())
 
@@ -69,8 +71,6 @@ class TestStates(unittest.TestCase):
 
         state_neel_2  = SpinState(np.array([1, 0]))
         self.assertEqual(0.5, state_neel_2.magnetisation())
-
-
 
     def test_energy(self):
 
@@ -85,9 +85,11 @@ class TestStates(unittest.TestCase):
         )
 
 class TestBasisGeneration(unittest.TestCase):
+    """This class tests the generation of possible basis states for given 
+    lattice size and number of spin-ups"""
 
     def test_basis_generation(self):
-        sector = HeisenbergSector(
+        sector = Sector(
             number_of_sites=4, 
             number_spinups=2, 
             jz=1
@@ -102,24 +104,31 @@ class TestBasisGeneration(unittest.TestCase):
 
 
     def test_hilbertspace_sizes(self):
-        """Setup basis for given setup and compare to M. Aichorn's results"""
+        """Setup basis for given setup and compare to given results (see 
+        instructions)"""
 
         # N = 8, nUp = 4 (Sz=0), Jz = 0
         expected = 70
-        basis = HeisenbergSector(8, 4, 0).setup_basis()
+        basis = Sector(8, 4, 0).setup_basis()
         self.assertEqual(expected, len(basis))        
 
         # N = 14, nUp = 7 (Sz=0), Jz = 0
         expected = 3432
-        basis = HeisenbergSector(14, 7, 0).setup_basis()
+        basis = Sector(14, 7, 0).setup_basis()
         self.assertEqual(expected, len(basis))        
 
         # N = 20, nUp = 10 (Sz=0), Jz = 0
         expected = 184756
-        basis = HeisenbergSector(20, 10, 0).setup_basis()
+        basis = Sector(20, 10, 0).setup_basis()
         self.assertEqual(expected, len(basis))
 
 class TestHamiltonianGeneration(unittest.TestCase):
+    """Test the setup of the hamiltonian matrix for given N, nUp. 
+    
+    Note:
+        Implicitly in all tests the basis is generated first. Thus, these tests 
+        may fail if there is an error there...
+    """
 
     def test_generate_2SpinSystem_Sz0(self):
         """Setup H for 2 spin-system and compare results to what is given
@@ -128,14 +137,14 @@ class TestHamiltonianGeneration(unittest.TestCase):
         for Jz in [0, 1, 2]: 
             #expected = np.array([[-Jz/4, 1/2], [1/2, -Jz/4]]) # laut skript
             expected = np.array([[-Jz/2, 1], [1, -Jz/2]]) # was ich mir so denk
-            H = HeisenbergSector(2, 1, Jz).setup_hamiltonian().toarray()
+            H = Sector(2, 1, Jz).setup_hamiltonian().toarray()
             np.testing.assert_array_almost_equal(expected, H)
 
 
     def test_H_generation_N4_nUp2(self):
         
         for J in [0, 1, 2]:
-            sector = HeisenbergSector(
+            sector = Sector(
                 number_of_sites=4, 
                 number_spinups=2, 
                 jz=J
@@ -156,13 +165,14 @@ class TestHamiltonianGeneration(unittest.TestCase):
 
             np.testing.assert_array_equal(expected, sector.H.toarray())
 class TestDiagonalisation(unittest.TestCase):
+    """Test the lanczos algorithm"""
     def test_lanczos_small(self):
 
         A = np.array([[2, 1], [1, 2]])
         a = 1
         v = np.array([1,-1])
 
-        a_act, v_act, _ = HeisenbergSector.lanczos_diagonalisation(A)
+        a_act, v_act, _ = Sector.lanczos_diagonalisation(A)
         self._assert_eig_result(a, v, a_act, v_act, 1E-4)
 
     def test_lanzos_middle(self):
@@ -179,7 +189,7 @@ class TestDiagonalisation(unittest.TestCase):
         a = -12.0509
         v = np.array([0.204647, -0.04609, -0.246984, -0.267927, 1])
 
-        a_act, v_act, _ = HeisenbergSector.lanczos_diagonalisation(A)
+        a_act, v_act, _ = Sector.lanczos_diagonalisation(A)
         self._assert_eig_result(a, v, a_act, v_act, 1E-4)
         
 
@@ -197,7 +207,7 @@ class TestDiagonalisation(unittest.TestCase):
         v_expected = vectors[:, 0]
 
         # actual:
-        E_actual, v_actual, _ = HeisenbergSector.lanczos_diagonalisation(A)
+        E_actual, v_actual, _ = Sector.lanczos_diagonalisation(A)
 
         self._assert_eig_result(E_expected, v_expected, E_actual, v_actual)
     
@@ -219,7 +229,7 @@ class TestDiagonalisation(unittest.TestCase):
 
         # todo
 
-        sector = HeisenbergSector(
+        sector = Sector(
             number_of_sites=2,
             number_spinups=1,
             jz=1
@@ -241,7 +251,7 @@ class TestDiagonalisation(unittest.TestCase):
         Lt. Markus Aichhorn diagonal in 6 Schritten
         """
 
-        sector = HeisenbergSector(
+        sector = Sector(
             number_of_sites=6,
             number_spinups=3,
             jz=0
@@ -280,7 +290,7 @@ class TestDiagonalisation(unittest.TestCase):
         Lt. Markus Aichhorn diagonal in 21 Schritten
         """
 
-        sector = HeisenbergSector(
+        sector = Sector(
             number_of_sites=10,
             number_spinups=5,
             jz=2

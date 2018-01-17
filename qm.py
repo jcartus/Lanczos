@@ -5,7 +5,7 @@ import copy
 import utilities
 
 
-class HeisenbergSector(object):
+class Sector(object):
 
     def __init__(self, number_of_sites, number_spinups, jz):
 
@@ -359,7 +359,7 @@ def simulate_heisenberg_model(L, jz):
     lowest_ground_state = None
     for n in N:
         utilities.InfoStream.message("Analyzing sector n_up = {0}".format(n))
-        sector = HeisenbergSector(L, n, jz)
+        sector = Sector(L, n, jz)
         E, ground_state = sector.calculate_ground_state()
         if E < E_min:
             E_min = E

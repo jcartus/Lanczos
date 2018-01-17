@@ -1,3 +1,10 @@
+"""This module contains tools needed to control the simulation, analyze the 
+and display the results and some other handy stuff.
+
+Author:
+    Johannes Cartus, TU Graz
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
 from os.path import isfile
@@ -9,6 +16,7 @@ from datetime import datetime
 
 
 class Result(object):
+    """A place to store results of an experiment"""
     def __init__(self, L, E, m, m2, corr):
         self.L = L
         self.energy_density = E
@@ -17,6 +25,8 @@ class Result(object):
         self.correlation = corr
 
 class Experiment(object):
+    """Simulates Heisenberg model for various lattice sizes and can process the
+    result"""
     def __init__(self, Jz, L_min=2, L_max=16, L_step=1):
         self.Jz = Jz
         self.lattice_sizes = list(range(L_min, L_max + 1, L_step))
