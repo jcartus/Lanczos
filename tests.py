@@ -128,7 +128,7 @@ class TestHamiltonianGeneration(unittest.TestCase):
         for Jz in [0, 1, 2]: 
             #expected = np.array([[-Jz/4, 1/2], [1/2, -Jz/4]]) # laut skript
             expected = np.array([[-Jz/2, 1], [1, -Jz/2]]) # was ich mir so denk
-            H = HeisenbergSector(2, 1, Jz).setup_hamiltonian()
+            H = HeisenbergSector(2, 1, Jz).setup_hamiltonian().toarray()
             np.testing.assert_array_almost_equal(expected, H)
 
 
@@ -154,7 +154,7 @@ class TestHamiltonianGeneration(unittest.TestCase):
                 ]
             )
 
-            np.testing.assert_array_equal(expected, sector.H)
+            np.testing.assert_array_equal(expected, sector.H.toarray())
 class TestDiagonalisation(unittest.TestCase):
     def test_lanczos_small(self):
 

@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.sparse import dok_matrix
 import math
 import copy
 import utilities
@@ -91,7 +92,7 @@ class HeisenbergSector(object):
         basis_in_decimal = [x.decimal for x in self.basis]
 
         dim = len(self.basis)
-        H = np.zeros((dim, dim)) #todo sparse matrix!
+        H = dok_matrix((dim, dim)) #todo sparse matrix!
         #---
 
         for i, state in enumerate(self.basis):
@@ -108,8 +109,8 @@ class HeisenbergSector(object):
             H[i, j] = 0.5 + int(self.number_of_sites == 2) * 0.5
             #---
 
-        self.H = H
-        return H
+        self.H = H.tocsc()
+        return self.H
 
     @staticmethod
     def lanczos_diagonalisation(
@@ -120,7 +121,7 @@ class HeisenbergSector(object):
             delta_k=1E-25
         ):
         
-        L = len(H)
+        L = H.shape[0]
 
         if n_max is None:
             n_max = 2 * L**2 #todo oder doch nur L?
@@ -154,7 +155,7 @@ class HeisenbergSector(object):
                 break
 
             x = x / k[-1]
-            e.append(np.dot(x, np.dot(H, x)))
+            e.append(np.dot(x, H.dot(x)))
 
             if n % n_diag == 0:
                 # diagonalize in krylov space
@@ -170,7 +171,7 @@ class HeisenbergSector(object):
                 else:
                     E_old = E
 
-            x_new = np.dot(H, x) - e[-1] * x - k[-1] * x_old
+            x_new = H.dot(x) - e[-1] * x - k[-1] * x_old
             x_old = x
             x = x_new
 
@@ -193,7 +194,7 @@ class HeisenbergSector(object):
             x  = x / k[i]
             c += c_krylov[i] * x
 
-            x_new = np.dot(H, x) - e[i] * x - k[i] * x_old
+            x_new = H.dot(x) - e[i] * x - k[i] * x_old
             x_old = x
             x = x_new
         #---
