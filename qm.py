@@ -102,7 +102,7 @@ class Sector(object):
         basis_in_decimal = [x.decimal for x in self.basis]
 
         dim = len(self.basis)
-        H = dok_matrix((dim, dim)) #todo sparse matrix!
+        H = dok_matrix((dim, dim)) 
         #---
 
         for i, state in enumerate(self.basis):
@@ -245,7 +245,6 @@ class BasisState(object):
         # get spins of nearest neighbour
         bit_seq_nearest_neighbour = np.roll(self.bit_seq, -1)
 
-        # todo check this again
         is_flipable = self.bit_seq != bit_seq_nearest_neighbour
         #---
 
