@@ -134,7 +134,7 @@ class Sector(object):
         L = H.shape[0]
 
         if n_max is None:
-            n_max = 2 * L**2 #todo oder doch nur L?
+            n_max = L
 
         if n_diag is None:
             n_diag = np.ceil(L / 10.0)
